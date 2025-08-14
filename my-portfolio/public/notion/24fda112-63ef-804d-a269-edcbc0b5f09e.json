@@ -1,0 +1,361 @@
+{
+  "id": "24fda112-63ef-804d-a269-edcbc0b5f09e",
+  "blocks": [
+    {
+      "object": "block",
+      "id": "24fda112-63ef-806d-8856-d26458a5476f",
+      "parent": {
+        "type": "page_id",
+        "page_id": "24fda112-63ef-804d-a269-edcbc0b5f09e"
+      },
+      "created_time": "2025-08-14T15:59:00.000Z",
+      "last_edited_time": "2025-08-14T15:59:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "has_children": false,
+      "archived": false,
+      "in_trash": false,
+      "type": "heading_1",
+      "heading_1": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "배경",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "배경",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      }
+    },
+    {
+      "object": "block",
+      "id": "24fda112-63ef-80de-92eb-c272d26343e1",
+      "parent": {
+        "type": "page_id",
+        "page_id": "24fda112-63ef-804d-a269-edcbc0b5f09e"
+      },
+      "created_time": "2025-08-14T15:59:00.000Z",
+      "last_edited_time": "2025-08-14T15:59:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "has_children": false,
+      "archived": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "문서의 맥락, 목표, 범위",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "문서의 맥락, 목표, 범위",
+            "href": null
+          }
+        ],
+        "color": "default"
+      }
+    },
+    {
+      "object": "block",
+      "id": "24fda112-63ef-80a7-9e34-d6820146c8b1",
+      "parent": {
+        "type": "page_id",
+        "page_id": "24fda112-63ef-804d-a269-edcbc0b5f09e"
+      },
+      "created_time": "2025-08-14T15:59:00.000Z",
+      "last_edited_time": "2025-08-14T15:59:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "has_children": false,
+      "archived": false,
+      "in_trash": false,
+      "type": "heading_1",
+      "heading_1": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "분석",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "분석",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      }
+    },
+    {
+      "object": "block",
+      "id": "24fda112-63ef-8066-bdbc-c38e5d70f70f",
+      "parent": {
+        "type": "page_id",
+        "page_id": "24fda112-63ef-804d-a269-edcbc0b5f09e"
+      },
+      "created_time": "2025-08-14T15:59:00.000Z",
+      "last_edited_time": "2025-08-14T15:59:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "has_children": false,
+      "archived": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "연구 결과, 데이터 인사이트, 주요 고려 사항",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "연구 결과, 데이터 인사이트, 주요 고려 사항",
+            "href": null
+          }
+        ],
+        "color": "default"
+      }
+    },
+    {
+      "object": "block",
+      "id": "24fda112-63ef-8003-9933-d3a908a4fb64",
+      "parent": {
+        "type": "page_id",
+        "page_id": "24fda112-63ef-804d-a269-edcbc0b5f09e"
+      },
+      "created_time": "2025-08-14T15:59:00.000Z",
+      "last_edited_time": "2025-08-14T15:59:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "has_children": false,
+      "archived": false,
+      "in_trash": false,
+      "type": "heading_1",
+      "heading_1": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "권장 사항",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "권장 사항",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      }
+    },
+    {
+      "object": "block",
+      "id": "24fda112-63ef-80d8-9966-c1b13b044f55",
+      "parent": {
+        "type": "page_id",
+        "page_id": "24fda112-63ef-804d-a269-edcbc0b5f09e"
+      },
+      "created_time": "2025-08-14T15:59:00.000Z",
+      "last_edited_time": "2025-08-14T15:59:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "has_children": false,
+      "archived": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "제안된 솔루션, 전략 및 다음 단계",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "제안된 솔루션, 전략 및 다음 단계",
+            "href": null
+          }
+        ],
+        "color": "default"
+      }
+    },
+    {
+      "object": "block",
+      "id": "24fda112-63ef-80b5-9294-e5c4862ddc5d",
+      "parent": {
+        "type": "page_id",
+        "page_id": "24fda112-63ef-804d-a269-edcbc0b5f09e"
+      },
+      "created_time": "2025-08-14T15:59:00.000Z",
+      "last_edited_time": "2025-08-14T15:59:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "has_children": false,
+      "archived": false,
+      "in_trash": false,
+      "type": "heading_1",
+      "heading_1": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "실행",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "실행",
+            "href": null
+          }
+        ],
+        "is_toggleable": false,
+        "color": "default"
+      }
+    },
+    {
+      "object": "block",
+      "id": "24fda112-63ef-80cf-b0ad-def4d13a1e6a",
+      "parent": {
+        "type": "page_id",
+        "page_id": "24fda112-63ef-804d-a269-edcbc0b5f09e"
+      },
+      "created_time": "2025-08-14T15:59:00.000Z",
+      "last_edited_time": "2025-08-14T15:59:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "8bd84e0a-daf6-4d37-ad3b-2f26ddde8d61"
+      },
+      "has_children": false,
+      "archived": false,
+      "in_trash": false,
+      "type": "paragraph",
+      "paragraph": {
+        "rich_text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "액션 아이템, 타임라인, 리소스 요구 사항",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "액션 아이템, 타임라인, 리소스 요구 사항",
+            "href": null
+          }
+        ],
+        "color": "default"
+      }
+    }
+  ]
+}

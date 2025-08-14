@@ -50,7 +50,14 @@ jobs:
           else
             npm install
           fi
-
+          
+      - name: Fetch Notion content
+        run: npm run fetch:notion
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_PROJECT_DB_IDS: ${{ secrets.NOTION_PROJECT_DB_IDS }}
+          NOTION_SITE_DB_ID: ${{ secrets.NOTION_SITE_DB_ID }}
+          
       - name: Build
         run: npm run build
 

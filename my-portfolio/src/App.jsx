@@ -1,41 +1,12 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react";
 import GlassCard from "./components/GlassCard.jsx"
 import ThemeToggle from "./components/ThemeToggle.jsx"
 import TagFilter from "./components/TagFilter.jsx"
+import projects from "./data/projects.json"
+import NotionContent from "./components/NotionContent.jsx"
+import GlassButton from "./components/GlassButton.jsx"
+import site from "./data/site.json"
 import "./index.css"
-
-const projects = [
-  {
-    title: "Real-Time Renderer",
-    tags: ["DirectX 11", "PBR", "ECS"],
-    desc: "멀티스레드 렌더 파이프라인과 PBR/포스트프로세싱 구현.",
-    link: "https://github.com/USER/real-time-renderer",
-  },
-  {
-    title: "VFX Graph Editor",
-    tags: ["ImGui", "Node Editor"],
-    desc: "유니티 스타일 VFX 그래프 에디터 및 런타임 모듈.",
-    link: "https://github.com/USER/vfx-graph",
-  },
-  {
-    title: "YAML Reflection System",
-    tags: ["C++", "Serialization"],
-    desc: "런타임 리플렉션 + YAML 직렬화/역직렬화 프레임워크.",
-    link: "https://github.com/USER/cpp-reflection",
-  },
-  {
-    title: "DX11 GPU Profiler HUD",
-    tags: ["DirectX 11", "Tools"],
-    desc: "타임스탬프 쿼리/링버퍼 기반 GPU 프로파일러 + HUD.",
-    link: "https://github.com/USER/dx11-profiler",
-  },
-  {
-    title: "Behavior Tree Builder",
-    tags: ["AI", "Tools"],
-    desc: "BT 빌더/런타임 + Blackboard, 스크립트 바인딩.",
-    link: "https://github.com/USER/bt-builder",
-  },
-]
 
 function useTags(allProjects) {
   const allTags = useMemo(() => {
@@ -47,16 +18,90 @@ function useTags(allProjects) {
 }
 
 function Nav() {
+  const sections = useMemo(() => ([
+    { id: "home",       label: "Home" },
+    { id: "about",      label: "About" },
+    { id: "projects",   label: "Projects" },
+    { id: "experience", label: "Experience" },
+    { id: "contact",    label: "Contact" },
+  ]), [])
+
+  const [active, setActive] = useState("home")
+
+  useEffect(() => {
+  const HEADER = 84; // index.css의 scroll-margin-top과 동일하게 유지
+  let tops = [];
+
+  const measure = () => {
+    tops = sections
+      .map(({ id }) => {
+        const el = document.getElementById(id);
+        return { id, top: el ? el.getBoundingClientRect().top + window.scrollY : Infinity };
+      })
+      .sort((a, b) => a.top - b.top);
+  };
+
+  const pick = () => {
+    const pos = window.scrollY + HEADER + 1;
+    // ✅ 바닥 근처면 마지막 섹션으로 강제 전환
+    const nearBottom =
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+    if (nearBottom) {
+      setActive(sections[sections.length - 1].id);
+      return;
+    }
+    // 현재 위치 기준, 가장 최근(위) 섹션 선택
+    let current = sections[0].id;
+    for (const r of tops) {
+      if (r.top <= pos) current = r.id;
+      else break;
+    }
+    setActive(current);
+  };
+
+  const onScroll = () => requestAnimationFrame(pick);
+  const onResize = () => { measure(); pick(); };
+
+  // 초기 해시(#about 등) 반영
+  const hash = window.location.hash.slice(1);
+  if (hash) setActive(hash);
+
+  // 초기 측정 + 이벤트 등록
+  measure(); pick();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onResize);
+
+  // ✅ 레이아웃/콘텐츠 높이 변화 대응 (프로젝트 필터 등)
+  const main = document.querySelector("main");
+  const ro = main ? new ResizeObserver(() => { measure(); pick(); }) : null;
+  ro?.observe(main);
+
+  // 폰트 로드 후 치수 변동 대응
+  document.fonts?.ready?.then(() => { measure(); pick(); });
+
+  return () => {
+    window.removeEventListener("scroll", onScroll);
+    window.removeEventListener("resize", onResize);
+    ro?.disconnect();
+  };
+}, [sections]);
+
   return (
     <header className="container topbar">
       <GlassCard>
         <nav className="nav">
-          <a href="#" className="brand">/portfolio</a>
-          <div className="links">
-            <a href="#about">About</a>
-            <a href="#projects">Projects</a>
-            <a href="#experience">Experience</a>
-            <a href="#contact">Contact</a>
+          <a href="#home" className="brand brand-gradient brand-chip">Portfolio</a>
+          <div className="links nav-links">
+            {sections.map(({ id, label }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                className={`nav-link ${active === id ? "active" : ""}`}
+                aria-current={active === id ? "page" : undefined}
+              >
+                {label}
+              </a>
+            ))}
             <ThemeToggle />
           </div>
         </nav>
@@ -67,14 +112,18 @@ function Nav() {
 
 function Hero() {
   return (
-    <section className="container">
+    <section id="home" className="container">
       <GlassCard>
         <div className="section pad-lg">
-          <h1 className="title">Park Young Ung</h1>
-          <p className="subtitle">Graphics / Engine Developer — DirectX 11, PBR, ECS, Tooling</p>
+          <h1 className="title">{site?.heroName || "Park Young Ung"}</h1>
+          <p className="subtitle">{site?.heroSubtitle || "Game Developer — DirectX 11, PBR, ECS, Tooling"}</p>
           <div className="row gap-sm">
-            <a className="link" href="https://github.com/USER" target="_blank" rel="noreferrer">GitHub</a>
-            <a className="link" href="https://linkedin.com/in/USER" target="_blank" rel="noreferrer">LinkedIn</a>
+            {site?.links?.github && (
+              <a className="link" href={site.links.github} target="_blank" rel="noreferrer">GitHub</a>
+            )}
+            {site?.links?.linkedin && (
+              <a className="link" href={site.links.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+            )}
             <a className="link" href="#contact">Email</a>
           </div>
         </div>
@@ -90,9 +139,7 @@ function About() {
         <div className="section">
           <h2 className="h2">About</h2>
           <p className="text-body">
-            디퍼드 렌더링, 멀티스레드 파이프라인, 포스트 프로세싱, 반사/굴절 등
-            그래픽스 전반을 즐깁니다. ImGui 기반 툴링과 YAML 리플렉션 시스템으로
-            워크플로우를 단순화합니다.
+            {site?.aboutText || "Null" }
           </p>
         </div>
       </GlassCard>
@@ -103,10 +150,11 @@ function About() {
 function Projects() {
   const allTags = useTags(projects)
   const [selected, setSelected] = useState(new Set())
+  const [openId, setOpenId] = useState(null)
 
   const filtered = useMemo(() => {
     if (selected.size === 0) return projects
-    return projects.filter(p => p.tags.some(t => selected.has(t)))
+    return projects.filter(p => p.tags?.some(t => selected.has(t)))
   }, [selected])
 
   const onToggle = (tag) => {
@@ -116,10 +164,40 @@ function Projects() {
   }
   const onClear = () => setSelected(new Set())
 
+  // ✅ 선택 카드로 스무스 스크롤
+  const scrollToCard = (id) => {
+    const el = document.getElementById(`project-${id}`)
+    if (!el) return
+    const HEADER = 84
+    const top = el.getBoundingClientRect().top + window.scrollY - HEADER - 8
+    window.scrollTo({ top, behavior: "smooth" })
+  }
+
+  // ✅ Projects 섹션 상단으로 스크롤
+  const scrollToProjects = () => {
+    const sec = document.getElementById("projects")
+    if (!sec) return
+    const HEADER = 84
+    const top = sec.getBoundingClientRect().top + window.scrollY - HEADER - 8
+    window.scrollTo({ top, behavior: "smooth" })
+  }
+
+  const openDetails = (id) => {
+    setOpenId(id)
+    // DOM 업데이트 뒤 위치 보정
+    setTimeout(() => scrollToCard(id), 0)
+  }
+
+  const closeDetails = () => {
+    setOpenId(null)
+    setTimeout(scrollToProjects, 0)
+  }
+
   return (
     <section id="projects" className="container">
       <h2 className="h2 mb">Projects</h2>
 
+      {/* 필터 카드 */}
       <GlassCard className="section">
         <div className="row between" style={{alignItems:"flex-start"}}>
           <div>
@@ -139,33 +217,68 @@ function Projects() {
         </div>
       </GlassCard>
 
-      <div className="grid" style={{marginTop: "1rem"}}>
-        {filtered.map((p) => (
-          <GlassCard key={p.title}>
-            <div className="card">
-              <h3 className="h3">{p.title}</h3>
-              <p className="text-body">{p.desc}</p>
-              <div className="tags">
-                {p.tags.map((t) => (
-                  <span key={t} className="tag">{t}</span>
-                ))}
+      {/* 카드 그리드 */}
+      <div className="grid" style={{ marginTop: "1rem" }}>
+        {filtered.map((p) => {
+          const expanded = openId === p.id
+          return (
+            <GlassCard
+              key={p.id}
+              id={`project-${p.id}`}
+              className={expanded ? "expanded" : ""}
+            >
+              <div className={`card ${expanded ? "card-expanded" : ""}`}>
+                {/* ✅ 뒤로가기 (확장 상태에서만 노출) */}
+                {expanded && (
+                  <div className="back-row">
+                    <GlassButton size="sm" variant="ring" onClick={closeDetails} aria-label="Back to projects">
+                      ← Back
+                    </GlassButton>
+                  </div>
+                )}
+
+                <h3 className="h3">{p.title}</h3>
+                <p className="text-body project-desc">{p.desc}</p>
+
+                <div className="tags">
+                  {p.tags?.map((t) => (
+                    <span key={t} className="tag">{t}</span>
+                  ))}
+                </div>
+
+                {/* 1행: Repo 링크 */}
+                <div className="mt row gap-sm">
+                  {p.link && (
+                    <a className="link link-sm" href={p.link} target="_blank" rel="noreferrer">
+                      Repo →
+                    </a>
+                  )}
+                </div>
+
+                {/* 2행: 확장 아닐 때만 Read more 노출 (확장 시엔 Back 버튼만) */}
+                {!expanded && (
+                  <div className="mt-xs">
+                    <button
+                      className="link link-sm"
+                      onClick={() => openDetails(p.id)}
+                      aria-expanded="false"
+                      aria-controls={`project-${p.id}`}
+                    >
+                      Read more
+                    </button>
+                  </div>
+                )}
+
+                {/* ✅ 확장 시 Notion 내용 표시 */}
+                {expanded && (
+                  <div className="mt notion-wrap">
+                    <NotionContent pageId={p.notionPageId} />
+                  </div>
+                )}
               </div>
-              <div className="mt">
-                <a className="link" href={p.link} target="_blank" rel="noreferrer">
-                  View repository →
-                </a>
-              </div>
-            </div>
-          </GlassCard>
-        ))}
-        {filtered.length === 0 && (
-          <GlassCard>
-            <div className="card">
-              <p className="text-body">선택한 태그에 해당하는 프로젝트가 없습니다.</p>
-              <button className="link" onClick={onClear}>Clear filters</button>
-            </div>
-          </GlassCard>
-        )}
+            </GlassCard>
+          )
+        })}
       </div>
     </section>
   )
@@ -173,22 +286,36 @@ function Projects() {
 
 function Experience() {
   const items = [
-    { role: "Graphics Engineer", org: "Indie Studio", period: "2024–2025", bullets: ["DX11 멀티스레드 렌더", "PBR + IBL + Bloom", "툴링/프로파일러"] },
-    { role: "Engine Developer", org: "University Lab", period: "2023–2024", bullets: ["ECS 전환", "리플렉션/YAML 직렬화", "Asset Pipeline"] },
+    { role: "Contents Developer", org: "게임 인재원", team: "MusketFire", period: "2024–2024", bullets: ["Musket 장전 로직 작성", "아이템 로직 작성"] },
+    { role: "Engine Developer", org: "게임 인재원", team: "Song of Savior", period: "2024–2024", bullets: ["D2D 렌더 엔진 작성"] },
+    { role: "Graphics Engineer", org: "게임 인재원", team: "BongsuRabbit", period: "2024–2025", bullets: ["DX11 렌더러 작성", "프로젝트용 자체 엔진 작성", "Imgui 툴링"] },
+    { role: "Engine Developer", org: "게임 인재원", team: "Quan", period: "2024–2025", bullets: ["DX11 멀티스레드 렌더", "리플렉션/YAML 직렬화", "PBR + IBL + Bloom", "엔진 및 에디터"] },
   ]
-  return (
-    <section id="experience" className="container">
+return (
+    <section id="experience" className="container /* section-tall 등 기존 클래스 유지 */">
       <h2 className="h2 mb">Experience</h2>
       <div className="col gap">
         {items.map((it) => (
-          <GlassCard key={it.role}>
+          <GlassCard key={`${it.role}-${it.org}-${it.team || ""}`}>
             <div className="card">
               <div className="row between">
-                <h3 className="h3">{it.role} @ {it.org}</h3>
+                <h3 className="h3">
+                  {it.role} @ {it.org}
+                </h3>
                 <span className="muted">{it.period}</span>
               </div>
-              <ul className="list">
-                {it.bullets.map((b) => <li key={b}>{b}</li>)}
+
+              {/* ✅ 팀명이 있으면 태그 형태로 노출 (기존 .tag 스타일 재사용) */}
+              {it.team && (
+                <div className="mt">
+                  <span className="tag">Team: {it.team}</span>
+                </div>
+              )}
+
+              <ul className="list mt">
+                {it.bullets.map((b) => (
+                  <li key={b}>{b}</li>
+                ))}
               </ul>
             </div>
           </GlassCard>
@@ -200,7 +327,7 @@ function Experience() {
 
 function Contact() {
   const [copied, setCopied] = useState(false)
-  const email = "you@example.com"
+  const email = "ideneb@naver.com"
   return (
     <section id="contact" className="container">
       <GlassCard>

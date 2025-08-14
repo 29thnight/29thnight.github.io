@@ -11,9 +11,15 @@
   --glass-bg: rgba(255,255,255,0.65);
   --glass-brd: rgba(0,0,0,0.08);
   --glass-hover: rgba(255,255,255,0.72);
+
   --tag-brd: rgba(0,0,0,0.18);
-  --tag-active: #0c1222;
+  --tag-active: #0c1222;           /* 라이트: 어두운 배경 */
+  --tag-active-text: #ffffff;      /* 라이트: 흰 글자 */
+  --tag-hover-bg: rgba(0,0,0,.06); /* 라이트: hover 배경 */
+  --tag-hover-text: var(--text);   /* 라이트: hover 글자 */
+  --tag-active-hover: #0a0f1d;     /* 라이트: active hover */
 }
+
 :root[data-theme="dark"] {
   --bg-1: #0f172a;
   --bg-2: #0b1020;
@@ -24,8 +30,13 @@
   --glass-bg: rgba(255,255,255,0.08);
   --glass-brd: rgba(255,255,255,0.18);
   --glass-hover: rgba(255,255,255,0.10);
+
   --tag-brd: rgba(255,255,255,0.25);
-  --tag-active: #ffffff;
+  --tag-active: #ffffff;           /* ✅ 다크: 흰 배경 */
+  --tag-active-text: #000000;      /* ✅ 다크: 검정 글자 */
+  --tag-hover-bg: rgba(255,255,255,.14); /* 다크: hover 배경 */
+  --tag-hover-text: #ffffff;       /* 다크: hover 글자 */
+  --tag-active-hover: #f2f2f2;     /* 다크: active hover */
 }
 
 * { box-sizing: border-box; }
@@ -63,7 +74,22 @@ body {
 .mb { margin-bottom: .75rem; }
 
 .text-body { opacity: .92; line-height: 1.65; }
-.link { color: var(--text); text-decoration: underline; background: transparent; border: none; cursor: pointer; }
+.link {
+  /* 공통 */
+  color: var(--text);
+  text-decoration: underline;
+  cursor: pointer;
+
+  /* a / button 차이 제거 */
+  background: transparent;
+  border: none;
+  padding: 0;                /* ✅ 버튼의 기본 좌우 패딩 제거 */
+  font: inherit;             /* ✅ 버튼의 시스템 폰트 → 부모 폰트로 통일 */
+  line-height: inherit;      /* ✅ 라인높이도 통일 */
+  vertical-align: baseline;  /* ✅ 베이스라인 정렬 */
+  -webkit-appearance: none;  /* ✅ 브라우저 기본 버튼 외형 제거 */
+  appearance: none;
+}
 .code { padding: .25rem .5rem; background: rgba(0,0,0,.06); border-radius: .4rem; }
 :root[data-theme="dark"] .code { background: rgba(255,255,255,.1); }
 
@@ -76,6 +102,8 @@ body {
 
 .card { padding: 1.25rem; }
 .tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .6rem; }
+
+/* 태그(필터) 버튼 */
 .tag {
   font-size: .8rem;
   padding: .35rem .6rem;
@@ -84,13 +112,29 @@ body {
   background: transparent;
   color: var(--text);
   cursor: pointer;
+  transition: background .15s ease, color .15s ease, border-color .15s ease, transform .08s ease;
 }
+.tag:hover {
+  background: var(--tag-hover-bg);
+  color: var(--tag-hover-text);
+}
+.tag:active { transform: translateY(1px); }
+.tag:focus-visible {
+  outline: 2px solid #5b9fff;
+  outline-offset: 2px;
+}
+
+/* 활성 태그(= 선택됨) */
 .tag-active {
   background: var(--tag-active);
-  color: #fff;
+  color: var(--tag-active-text);   /* ✅ 라이트/다크 모두 가독성 확보 */
   border-color: transparent;
 }
-.tag-clear { opacity: .85; }
+.tag-active:hover {
+  background: var(--tag-active-hover);
+}
+
+/* 필터 행 */
 .tags.filter { margin-top: 0; }
 
 .mt { margin-top: .75rem; }
@@ -114,9 +158,274 @@ body {
   border-color: var(--glass-brd);
 }
 
+html { scroll-behavior: smooth; }
+section[id] { scroll-margin-top: 84px; }
+
+/* ---- NAV ---- */
+.links.nav-links {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+/* 네비 링크(액티브 상태를 pill로 표시) */
+.nav-link {
+  color: var(--text);
+  text-decoration: none;
+  padding: .35rem .75rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  opacity: .85;
+  transition: background .15s ease, color .15s ease, border-color .15s ease, opacity .15s ease;
+}
+.nav-link:hover {
+  opacity: 1;
+  background: var(--tag-hover-bg);
+  color: var(--tag-hover-text);
+}
+.nav-link.active {
+  opacity: 1;
+  background: var(--glass-hover);
+  border-color: var(--glass-brd);
+}
+
 /* 시스템 다크모드 초기값(직접 토글 전) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
     color-scheme: dark;
   }
+}
+
+/* === Brand gradient (라이트/다크 테마 색상 변수) === */
+:root {
+  --brand-g1: #5f02ff;
+  --brand-g2: #9d00ff;
+  --brand-g3: #c300ff;
+}
+:root[data-theme="dark"] {
+  --brand-g1: #a78bfa;  /* 라이트한 보라 */
+  --brand-g2: #22d3ee;  /* 라이트한 청록 */
+  --brand-g3: #86efac;  /* 라이트한 연두 */
+}
+
+/* 텍스트 그라데이션 */
+.brand-gradient {
+  background: linear-gradient(90deg, var(--brand-g1), var(--brand-g2) 50%, var(--brand-g3));
+  background-size: 100% 100%;
+  -webkit-background-clip: text;
+          background-clip: text;
+  -webkit-text-fill-color: transparent; /* 사파리 대비 */
+  color: transparent;
+  text-decoration: none;
+  transition: filter .15s ease;
+}
+.brand-gradient:hover { filter: brightness(1.05); }
+
+/* 선택 영역 시 가독성(선택 배경 대비) */
+.brand-gradient::selection {
+  -webkit-text-fill-color: #000;
+  color: #000;
+  background: #fff7; /* 살짝 투명한 흰색 */
+}
+:root[data-theme="dark"] .brand-gradient::selection {
+  -webkit-text-fill-color: #000;
+  color: #000;
+  background: #fffb; /* 다크에선 좀 더 밝게 */
+}
+
+/* (옵션) 부드럽게 색이 흐르는 애니메이션 */
+.brand-animated {
+  background-size: 200% 100%;
+  animation: brand-shift 6s ease-in-out infinite;
+}
+@keyframes brand-shift {
+  0%   { background-position:   0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position:   0% 50%; }
+}
+
+:root {
+  --ring-w: 1.5px;               /* 테두리 두께 */
+  --ring-grad: linear-gradient(135deg, var(--brand-g1), var(--brand-g2) 50%, var(--brand-g3));
+}
+
+/* 브랜드 캡슐(텍스트 + 그라데이션 테두리) */
+.brand-chip {
+  display: inline-block;
+  position: relative;
+  padding: .35rem .75rem;        /* 캡슐 형태 패딩 */
+  border-radius: 9999px;
+  text-decoration: none;
+}
+.brand-chip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: var(--ring-w);        /* 테두리 두께 */
+  background: var(--ring-grad);
+  /* 내부를 뚫어서 '테두리 링'만 남기기 (마스크) */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* 활성 네비 pill에도 동일한 그라데이션 테두리 적용 */
+.nav-link.active {
+  position: relative;
+  background: var(--glass-hover);
+  border-color: transparent;     /* 기본 테두리는 비활성화 */
+}
+.nav-link.active::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  padding: var(--ring-w);
+  background: var(--ring-grad);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* 살짝 은은한 광택 느낌 (선택) */
+.brand-chip:hover,
+.nav-link.active:hover {
+  filter: brightness(1.05);
+}
+
+/* tall 섹션: 섹션 자체 높이만 키움 */
+.section-tall { min-height: 72vh; }
+@media (max-width: 768px) {
+  .section-tall { min-height: 58vh; }
+}
+
+/* 카드까지 꽉 채우고 싶을 때: 섹션+카드 모두 늘림 */
+.section-tall-fill { min-height: 72vh; display: flex; }
+.section-tall-fill .glass { flex: 1; display: flex; }
+.section-tall-fill .card  { flex: 1; }
+
+@media (max-width: 768px) {
+  .section-tall-fill { min-height: 58vh; }
+}
+
+/* (선택) 내부 패딩 더 늘리고 싶을 때 */
+.pad-xl { padding: 3rem 2rem; }
+@media (min-width: 768px) {
+  .pad-xl { padding: 4rem 3rem; }
+}
+
+/* Projects 카드 설명 전용 크기 */
+:root { --project-desc-size: .92rem; }          /* 약 15px 정도 */
+@media (min-width: 1024px) {
+  :root { --project-desc-size: .95rem; }        /* 데스크톱에서 살짝 키움(선택) */
+}
+
+.project-desc {
+  font-size: var(--project-desc-size);
+  line-height: 1.55;     /* 기존 text-body(1.65)보다 조금 조밀하게 */
+  opacity: .9;
+}
+
+.mt-xs { margin-top: .4rem; }
+
+:root {
+  --link-size-sm: .9rem; /* 약 14.4px — 더 작게 하고 싶으면 .875rem */
+}
+.link-sm {
+  font-size: var(--link-size-sm);
+  line-height: 1.35; /* 줄간격 살짝 타이트하게 */
+}
+
+/* --- Projects 확장 카드 --- */
+.grid .expanded { grid-column: 1 / -1; }        /* ✅ 선택 카드만 가로로 전체 폭 */
+.card-expanded { padding: 1.5rem; }
+@media (min-width: 1024px) {
+  .card-expanded { padding: 2rem; }
+}
+
+/* 뒤로가기 줄(타이틀 위에 살짝 공간) */
+.back-row { margin-bottom: .5rem; }
+
+/* 밑줄 없이 보이는 깔끔한 링크(호버 시만 밑줄) */
+.link-plain { text-decoration: none; }
+.link-plain:hover { text-decoration: underline; }
+
+/* 작은 상단 마진 유틸 (Repo 아래 Read more 간격) */
+.mt-xs { margin-top: .4rem; }
+
+/* 노션 본문 컨테이너 가독성 */
+.notion-wrap { max-width: 100%; }
+.notion-wrap .text-body { line-height: 1.65; }
+.notion-wrap pre { overflow:auto; padding:.75rem; border-radius:.5rem; }
+
+/* ===== Glass Button ===== */
+:root {
+  /* 그라데이션 링이 필요하면 아래 색 변수를 사용 (이미 있으면 재정의 OK) */
+  --brand-g1: #7c3aed;
+  --brand-g2: #06b6d4;
+  --brand-g3: #22c55e;
+  --ring-w: 1.5px;
+  --ring-grad: linear-gradient(135deg, var(--brand-g1), var(--brand-g2) 50%, var(--brand-g3));
+}
+
+.glass-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .4rem .8rem;
+  border-radius: 9999px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-brd);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  color: var(--text);
+  font: inherit;
+  line-height: 1.1;
+  cursor: pointer;
+  transition: transform .12s ease, background .15s ease, border-color .15s ease, filter .15s ease;
+}
+.glass-btn:hover { background: var(--glass-hover); transform: translateY(-1px); }
+.glass-btn:active { transform: translateY(0); }
+.glass-btn:focus-visible { outline: 2px solid #5b9fff; outline-offset: 2px; }
+
+.glass-btn-sm { padding: .32rem .7rem; font-size: .9rem; }
+
+/* 그라데이션 링 변형 */
+.glass-btn--ring { position: relative; border-color: transparent; }
+.glass-btn--ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: var(--ring-w);
+  background: var(--ring-grad);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+}
+
+.card-expanded .h3 {
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem); /* 기존 1.05rem → 크게 */
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin-top: .25rem;
 }
