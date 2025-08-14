@@ -1,3 +1,4 @@
+# .github/workflows/deploy.yml
 name: Deploy to GitHub Pages
 
 on:
@@ -17,6 +18,12 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    # ✅ 모든 run 스텝의 기본 작업 디렉터리를 지정
+    defaults:
+      run:
+        working-directory: my-portfolio
+
     steps:
       - uses: actions/checkout@v4
 
@@ -24,6 +31,7 @@ jobs:
         with:
           node-version: 22
 
+      # (선택) npm 캐시. lockfile 없으면 npm install로 진행해도 OK
       - name: Ensure npm cache dir
         run: mkdir -p ~/.npm
 
@@ -49,10 +57,11 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      # ✅ 아티팩트 경로는 루트 기준이므로 폴더 포함해서 지정
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: my-portfolio/dist
 
   deploy:
     needs: build
