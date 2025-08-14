@@ -20,21 +20,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 캐시는 락파일이 있을 때만 활성화
-      - name: Setup Node (with cache if lockfile exists)
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: ${{ hashFiles('**/package-lock.json') != '' && 'npm' || '' }}
-          cache-dependency-path: package-lock.json
+
+      - name: Ensure npm cache dir
+        run: mkdir -p ~/.npm
+
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', '**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: |
           if [ -f package-lock.json ]; then
-            echo "Lockfile found → npm ci"
             npm ci
           else
-            echo "No lockfile → npm install"
             npm install
           fi
 
