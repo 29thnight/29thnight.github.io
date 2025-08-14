@@ -1,5 +1,7 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import GlassCard from "./components/GlassCard.jsx"
+import ThemeToggle from "./components/ThemeToggle.jsx"
+import TagFilter from "./components/TagFilter.jsx"
 import "./index.css"
 
 const projects = [
@@ -21,7 +23,28 @@ const projects = [
     desc: "런타임 리플렉션 + YAML 직렬화/역직렬화 프레임워크.",
     link: "https://github.com/USER/cpp-reflection",
   },
+  {
+    title: "DX11 GPU Profiler HUD",
+    tags: ["DirectX 11", "Tools"],
+    desc: "타임스탬프 쿼리/링버퍼 기반 GPU 프로파일러 + HUD.",
+    link: "https://github.com/USER/dx11-profiler",
+  },
+  {
+    title: "Behavior Tree Builder",
+    tags: ["AI", "Tools"],
+    desc: "BT 빌더/런타임 + Blackboard, 스크립트 바인딩.",
+    link: "https://github.com/USER/bt-builder",
+  },
 ]
+
+function useTags(allProjects) {
+  const allTags = useMemo(() => {
+    const set = new Set()
+    allProjects.forEach(p => p.tags.forEach(t => set.add(t)))
+    return Array.from(set).sort((a,b)=>a.localeCompare(b))
+  }, [allProjects])
+  return allTags
+}
 
 function Nav() {
   return (
@@ -34,6 +57,7 @@ function Nav() {
             <a href="#projects">Projects</a>
             <a href="#experience">Experience</a>
             <a href="#contact">Contact</a>
+            <ThemeToggle />
           </div>
         </nav>
       </GlassCard>
@@ -77,11 +101,46 @@ function About() {
 }
 
 function Projects() {
+  const allTags = useTags(projects)
+  const [selected, setSelected] = useState(new Set())
+
+  const filtered = useMemo(() => {
+    if (selected.size === 0) return projects
+    return projects.filter(p => p.tags.some(t => selected.has(t)))
+  }, [selected])
+
+  const onToggle = (tag) => {
+    const next = new Set(selected)
+    next.has(tag) ? next.delete(tag) : next.add(tag)
+    setSelected(next)
+  }
+  const onClear = () => setSelected(new Set())
+
   return (
     <section id="projects" className="container">
       <h2 className="h2 mb">Projects</h2>
-      <div className="grid">
-        {projects.map((p) => (
+
+      <GlassCard className="section">
+        <div className="row between" style={{alignItems:"flex-start"}}>
+          <div>
+            <div className="muted" style={{marginBottom:".5rem"}}>
+              {selected.size === 0 ? "All projects" : `Filtered by: ${Array.from(selected).join(", ")}`}
+            </div>
+            <TagFilter
+              allTags={allTags}
+              selected={selected}
+              onToggle={onToggle}
+              onClear={onClear}
+            />
+          </div>
+          <div className="muted">
+            {filtered.length} / {projects.length}
+          </div>
+        </div>
+      </GlassCard>
+
+      <div className="grid" style={{marginTop: "1rem"}}>
+        {filtered.map((p) => (
           <GlassCard key={p.title}>
             <div className="card">
               <h3 className="h3">{p.title}</h3>
@@ -99,6 +158,14 @@ function Projects() {
             </div>
           </GlassCard>
         ))}
+        {filtered.length === 0 && (
+          <GlassCard>
+            <div className="card">
+              <p className="text-body">선택한 태그에 해당하는 프로젝트가 없습니다.</p>
+              <button className="link" onClick={onClear}>Clear filters</button>
+            </div>
+          </GlassCard>
+        )}
       </div>
     </section>
   )

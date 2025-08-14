@@ -20,18 +20,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      # 캐시는 락파일이 있을 때만 활성화
+      - name: Setup Node (with cache if lockfile exists)
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: ${{ hashFiles('**/package-lock.json') != '' && 'npm' || '' }}
+          cache-dependency-path: package-lock.json
 
-      - run: npm ci
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "Lockfile found → npm ci"
+            npm ci
+          else
+            echo "No lockfile → npm install"
+            npm install
+          fi
 
-      - run: npm run build
+      - name: Build
+        run: npm run build
 
-      - uses: actions/configure-pages@v5
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
