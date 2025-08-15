@@ -276,9 +276,6 @@ if (NOTION_SITE_DB_ID) {
       'utf8'
     )
     console.log('[notion] Wrote src/data/site.json')
-
-    // ✅ HomePageId / AboutPageId는 더 이상 사용하지 않으므로
-    // public/notion/* 블록 파일을 추가로 만들 필요가 없습니다.
   }
 } else {
   console.log('[notion] NOTION_SITE_DB_ID not set. Skipping site.json.')
