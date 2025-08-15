@@ -592,5 +592,3 @@ section[id] { scroll-margin-top: 84px; }
 .nt-h1 + .text-body,
 .nt-h2 + .text-body,
 .nt-h3 + .text-body { margin-top: .25rem; }
-
-.nt-h1, .nt-h2, .nt-h3 { color: color-mix(in oklab, var(--text) 92%, transparent); }
