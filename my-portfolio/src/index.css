@@ -429,3 +429,18 @@ section[id] { scroll-margin-top: 84px; }
   letter-spacing: -0.01em;
   margin-top: .25rem;
 }
+
+.notion-img { margin: .75rem 0; }
+.notion-img img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: .75rem;
+  border: 1px solid var(--glass-brd);
+  background: var(--glass-bg);
+}
+.notion-img figcaption {
+  font-size: .9rem;
+  opacity: .8;
+  margin-top: .25rem;
+}

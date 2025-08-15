@@ -10,6 +10,19 @@ function Block({ b }) {
   const t = b.type
   const data = b[t]
   switch (t) {
+    case 'image': { 
+      const cap = (data.caption || []).map(c => c.plain_text).join('')
+      const local = data._local ? `${BASE}notion/${data._local}` : null
+      const remote = data.type === 'external' ? data.external?.url : data.file?.url
+      const src = local || remote
+      if (!src) return null
+      return (
+        <figure className="notion-img">
+          <img src={src} alt={cap || 'image'} loading="lazy" />
+          {cap ? <figcaption>{cap}</figcaption> : null}
+        </figure>
+      )
+    }
     case 'heading_1': return <h1 className="h2"><Rich nodes={data.rich_text} /></h1>
     case 'heading_2': return <h2 className="h3"><Rich nodes={data.rich_text} /></h2>
     case 'heading_3': return <h3 className="h3"><Rich nodes={data.rich_text} /></h3>

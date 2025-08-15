@@ -63,6 +63,60 @@ async function getBlocksRecursive(block_id, depth = 0) {
   return out
 }
 
+async function processImages(blocks, OUT_PUBLIC_DIR) {
+  const assetsDir = path.join(OUT_PUBLIC_DIR, 'assets')
+  await fs.mkdir(assetsDir, { recursive: true })
+
+  async function pickExt(url, res) {
+    // 1) URL 확장자
+    try {
+      const u = new URL(url)
+      const m = u.pathname.match(/\.(png|jpe?g|webp|gif|svg|bmp|ico)$/i)
+      if (m) return m[1].toLowerCase().replace('jpeg', 'jpg')
+    } catch {}
+    // 2) 헤더(가능하면)
+    const ct = res?.headers?.get?.('content-type') || ''
+    if (ct.includes('png'))  return 'png'
+    if (ct.includes('jpeg')) return 'jpg'
+    if (ct.includes('webp')) return 'webp'
+    if (ct.includes('gif'))  return 'gif'
+    if (ct.includes('svg'))  return 'svg'
+    return 'jpg'
+  }
+
+  async function walk(list) {
+    if (!Array.isArray(list)) return
+    for (const b of list) {
+      if (b?.type === 'image') {
+        const data = b.image
+        const src = data?.type === 'external' ? data.external?.url : data.file?.url
+        if (src) {
+          let res
+          try {
+            // Node 18+ 내장 fetch 사용
+            res = await fetch(src)
+            if (!res.ok) throw new Error(`HTTP ${res.status}`)
+            const ext = await pickExt(src, res)
+            const filename = `${b.id}.${ext}`
+            const dest = path.join(assetsDir, filename)
+            const buf = Buffer.from(await res.arrayBuffer())
+            await fs.writeFile(dest, buf)
+            // ✅ 런타임에서 BASE_URL을 붙여 사용할 상대 경로만 기록
+            data._local = `assets/${filename}`
+          } catch (e) {
+            // 실패 시 로컬 저장은 생략하고 원본 URL 그대로 사용 (만료될 수 있음)
+            console.warn(`[notion] image download failed: ${e}`)
+          }
+        }
+      }
+      if (Array.isArray(b?.children) && b.children.length) {
+        await walk(b.children)
+      }
+    }
+  }
+  await walk(blocks)
+}
+
 /* ============================================================
    A) Projects — 여러 DB 합치기
    ============================================================ */
@@ -156,6 +210,7 @@ if (projectDbIds.length) {
   // 각 프로젝트 페이지의 블록을 저장
   for (const proj of projects) {
     const blocks = await getBlocksRecursive(proj.id)
+    await processImages(blocks, OUT_PUBLIC_DIR) 
     await fs.writeFile(
       path.join(OUT_PUBLIC_DIR, `${proj.id}.json`),
       JSON.stringify({ id: proj.id, blocks }, null, 2),
