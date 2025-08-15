@@ -2,23 +2,63 @@ import { useEffect, useState } from 'react'
 
 const BASE = (import.meta.env && import.meta.env.BASE_URL) || '/'
 
-/* === Rich text (굵게/기울임/밑줄/취소/인라인코드/링크) === */
+/* === Rich text === */
 function RichText({ nodes }) {
   if (!nodes) return null
   return nodes.map((r, i) => {
     const a = r.annotations || {}
     const cls = [
-      a.bold ? 'nt-bold' : '',
-      a.italic ? 'nt-italic' : '',
-      a.underline ? 'nt-underline' : '',
-      a.strikethrough ? 'nt-strike' : '',
-      a.code ? 'nt-code' : '',
+      a.bold && 'nt-bold',
+      a.italic && 'nt-italic',
+      a.underline && 'nt-underline',
+      a.strikethrough && 'nt-strike',
+      a.code && 'nt-code',
     ].filter(Boolean).join(' ')
     const content = <span className={cls}>{r.plain_text}</span>
     return r.href
       ? <a key={i} className="link" href={r.href} target="_blank" rel="noreferrer">{content}</a>
       : <span key={i}>{content}</span>
   })
+}
+
+/* === 연속 리스트 아이템을 <ul>/<ol>로 묶어서 렌더 === */
+function renderBlocks(blocks) {
+  if (!Array.isArray(blocks)) return null
+  const out = []
+  for (let i = 0; i < blocks.length; i++) {
+    const b = blocks[i]
+    if (!b) continue
+
+    if (b.type === 'bulleted_list_item') {
+      const items = []
+      while (i < blocks.length && blocks[i]?.type === 'bulleted_list_item') {
+        items.push(blocks[i]); i++
+      }
+      i-- // 앞질러간 인덱스 보정
+      out.push(
+        <ul className="nt-list" key={'ul-' + items[0].id}>
+          {items.map(it => <Block key={it.id} b={it} />)}
+        </ul>
+      )
+      continue
+    }
+    if (b.type === 'numbered_list_item') {
+      const items = []
+      while (i < blocks.length && blocks[i]?.type === 'numbered_list_item') {
+        items.push(blocks[i]); i++
+      }
+      i--
+      out.push(
+        <ol className="nt-list" key={'ol-' + items[0].id}>
+          {items.map(it => <Block key={it.id} b={it} />)}
+        </ol>
+      )
+      continue
+    }
+
+    out.push(<Block key={b.id} b={b} />)
+  }
+  return out
 }
 
 /* === 블록 렌더 === */
@@ -35,16 +75,16 @@ function Block({ b }) {
     case 'paragraph':
       return <p className="text-body"><RichText nodes={data.rich_text} /></p>
 
-    /* ✅ 인용 */
+    /* 인용 */
     case 'quote':
       return (
         <blockquote className="notion-quote">
           <RichText nodes={data.rich_text} />
-          {b.children?.length ? b.children.map(c => <Block key={c.id} b={c} />) : null}
+          {b.children?.length ? renderBlocks(b.children) : null}
         </blockquote>
       )
 
-    /* ✅ 콜아웃 */
+    /* 콜아웃 */
     case 'callout': {
       const emoji = data.icon?.emoji || '💡'
       return (
@@ -52,13 +92,13 @@ function Block({ b }) {
           <div className="callout-icon">{emoji}</div>
           <div className="callout-content">
             <RichText nodes={data.rich_text} />
-            {b.children?.length ? b.children.map(c => <Block key={c.id} b={c} />) : null}
+            {b.children?.length ? renderBlocks(b.children) : null}
           </div>
         </div>
       )
     }
 
-    /* ✅ 코드 블록 */
+    /* 코드 */
     case 'code': {
       const txt = (data.rich_text || []).map(x => x.plain_text).join('')
       const lang = data.language || ''
@@ -70,23 +110,26 @@ function Block({ b }) {
       )
     }
 
-    /* 리스트(단일 아이템) — 간단 렌더 */
+    /* 리스트 아이템 (자식 리스트는 li 내부에서 한 번만 감싸기) */
     case 'bulleted_list_item':
       return (
         <li>
           <RichText nodes={data.rich_text} />
-          {b.children?.length ? <ul>{b.children.map(c => <Block key={c.id} b={c} />)}</ul> : null}
+          {b.children?.length ? (
+            <ul className="nt-list">{b.children.map(c => <Block key={c.id} b={c} />)}</ul>
+          ) : null}
         </li>
       )
     case 'numbered_list_item':
       return (
         <li>
           <RichText nodes={data.rich_text} />
-          {b.children?.length ? <ol>{b.children.map(c => <Block key={c.id} b={c} />)}</ol> : null}
+          {b.children?.length ? (
+            <ol className="nt-list">{b.children.map(c => <Block key={c.id} b={c} />)}</ol>
+          ) : null}
         </li>
       )
 
-    /* 체크박스 */
     case 'to_do':
       return (
         <label className="notion-todo">
@@ -95,19 +138,17 @@ function Block({ b }) {
         </label>
       )
 
-    /* 토글(펼치기) */
     case 'toggle':
       return (
         <details className="notion-toggle">
           <summary><RichText nodes={data.rich_text} /></summary>
-          {b.children?.length ? b.children.map(c => <Block key={c.id} b={c} />) : null}
+          {b.children?.length ? renderBlocks(b.children) : null}
         </details>
       )
 
-    /* 구분선 */
     case 'divider': return <hr />
 
-    /* ✅ 이미지 (빌드 시 로컬 저장 버전도 지원) */
+    /* 이미지(로컬 저장 버전과 원격 둘 다 지원) */
     case 'image': {
       const cap = (data.caption || []).map(c => c.plain_text).join('')
       const local = data._local ? `${BASE}notion/${data._local}` : null
@@ -144,7 +185,7 @@ export default function NotionContent({ pageId }) {
 
   return (
     <div className="notion">
-      {doc.blocks.map((b) => b && <Block key={b.id} b={b} />)}
+      {renderBlocks(doc.blocks)}
     </div>
   )
 }

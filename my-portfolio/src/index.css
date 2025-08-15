@@ -430,6 +430,23 @@ section[id] { scroll-margin-top: 84px; }
   margin-top: .25rem;
 }
 
+/* 공통 리스트 래퍼 (겹침 방지용 패딩) */
+.nt-list {
+  margin: .4rem 0 .6rem 0;
+  padding-left: 1.15rem;              /* ✅ 마커가 컨텐트 영역 안에서 시작 */
+  list-style-position: outside;       /* 기본: 마커는 바깥, 하지만 padding으로 공간 확보 */
+}
+
+/* 콜아웃 내부에선 아이콘 폭만큼 더 안 쪽으로 */
+.notion-callout .callout-content .nt-list {
+  padding-left: 1.2rem;               /* ✅ 아이콘 영역과 마커가 겹치지 않도록 */
+  margin-left: 0;
+}
+
+/* 콜아웃 레이아웃 보강 */
+.notion-callout { display:flex; gap:.7rem; align-items:flex-start; }
+.notion-callout .callout-content { min-width:0; } /* 긴 줄 줄바꿈 허용 */
+
 /* === 인라인 리치 텍스트 === */
 .nt-bold{font-weight:700}
 .nt-italic{font-style:italic}
