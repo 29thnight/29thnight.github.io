@@ -430,17 +430,78 @@ section[id] { scroll-margin-top: 84px; }
   margin-top: .25rem;
 }
 
-.notion-img { margin: .75rem 0; }
-.notion-img img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  border-radius: .75rem;
+/* === 인라인 리치 텍스트 === */
+.nt-bold{font-weight:700}
+.nt-italic{font-style:italic}
+.nt-underline{text-decoration:underline}
+.nt-strike{text-decoration:line-through}
+.nt-code{
+  font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  background: color-mix(in oklab, var(--glass-bg) 85%, black 5%);
   border: 1px solid var(--glass-brd);
-  background: var(--glass-bg);
+  padding: .05rem .35rem;
+  border-radius: .35rem;
 }
-.notion-img figcaption {
-  font-size: .9rem;
-  opacity: .8;
-  margin-top: .25rem;
+
+/* === 인용 === */
+.notion-quote{
+  margin:.75rem 0;
+  padding:.5rem .9rem;
+  border-left: 3px solid var(--glass-brd);
+  background: color-mix(in oklab, var(--glass-bg) 92%, black 4%);
+  border-radius:.5rem;
+  opacity:.95;
 }
+
+/* === 콜아웃 === */
+.notion-callout{
+  display:flex; gap:.6rem; align-items:flex-start;
+  margin:.75rem 0; padding:.7rem .9rem;
+  border:1px solid var(--glass-brd);
+  background: var(--glass-hover);
+  border-radius:.75rem;
+}
+.callout-icon{
+  flex:0 0 auto; width:1.75rem; height:1.75rem;
+  display:grid; place-items:center;
+  border-radius:.5rem;
+  background: color-mix(in oklab, var(--glass-bg) 85%, black 5%);
+  border:1px solid var(--glass-brd);
+  font-size:1rem;
+}
+.callout-content{ flex:1 1 auto; }
+
+/* === 코드 블록 === */
+.notion-code{
+  position:relative;
+  margin:.85rem 0; padding:.85rem 1rem;
+  background: color-mix(in oklab, var(--glass-bg) 88%, black 6%);
+  border:1px solid var(--glass-brd);
+  border-radius:.75rem;
+  overflow:auto;
+}
+.notion-code code{
+  font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.92rem; line-height:1.5;
+  white-space:pre;
+}
+.notion-code .code-lang{
+  position:absolute; top:.4rem; right:.55rem;
+  font-size:.7rem; opacity:.7;
+  border:1px solid var(--glass-brd);
+  border-radius:.4rem; padding:.05rem .35rem;
+  background: color-mix(in oklab, var(--glass-bg) 92%, black 4%);
+}
+
+/* === 체크박스/토글 === */
+.notion-todo { display:flex; gap:.5rem; align-items:flex-start; margin:.35rem 0; }
+.notion-toggle { margin:.5rem 0; }
+.notion-toggle > summary { cursor:pointer; }
+
+/* === 이미지 === */
+.notion-img { margin:.75rem 0; }
+.notion-img img{
+  display:block; max-width:100%; height:auto;
+  border-radius:.75rem; border:1px solid var(--glass-brd); background:var(--glass-bg);
+}
+.notion-img figcaption{ font-size:.9rem; opacity:.8; margin-top:.25rem; }
