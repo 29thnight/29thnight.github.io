@@ -173,7 +173,8 @@ export default function NotionContent({ pageId }) {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    const url = `${BASE}notion/${pageId}.json`
+    const v = (typeof __BUILD_ID__ !== 'undefined') ? `?v=${__BUILD_ID__}` : ''
+    const url = `${BASE}notion/${pageId}.json${v}`
     fetch(url)
       .then(r => r.ok ? r.json() : Promise.reject(new Error(`${r.status} ${r.statusText}`)))
       .then(setDoc)

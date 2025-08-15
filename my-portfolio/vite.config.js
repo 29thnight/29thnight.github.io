@@ -10,5 +10,9 @@ function computeBase() {
 
 export default defineConfig({
   plugins: [react()],
-  base: computeBase()
+  base: computeBase(),
+  define: {
+    // GitHub Actions에선 커밋 SHA, 로컬에선 timestamp를 버전으로 사용
+    __BUILD_ID__: JSON.stringify(process.env.GITHUB_SHA || String(Date.now()))
+  }
 })
