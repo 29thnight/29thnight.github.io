@@ -522,3 +522,50 @@ section[id] { scroll-margin-top: 84px; }
   border-radius:.75rem; border:1px solid var(--glass-brd); background:var(--glass-bg);
 }
 .notion-img figcaption{ font-size:.9rem; opacity:.8; margin-top:.25rem; }
+
+/* ===== Notion 리스트 가독성 향상 ===== */
+:root{
+  /* 들여쓰기 기본/중첩 단계 (필요하면 수치만 조절) */
+  --nt-indent: 1.25rem;         /* 최상위 리스트 들여쓰기 */
+  --nt-indent-nested: 1.25rem;  /* 중첩 리스트 단계당 들여쓰기 */
+  --nt-li-gap: .22rem;          /* 아이템 사이 간격 */
+  --nt-li-line: 1.6;            /* 아이템 줄간격 */
+}
+
+/* 리스트 래퍼: 바깥 여백과 기본 들여쓰기 */
+.nt-list{
+  margin: .6rem 0 .85rem;
+  padding-left: var(--nt-indent);
+  list-style-position: outside;   /* 마커는 바깥쪽(기본) */
+}
+
+/* 아이템 자체 간격/줄간격 */
+.nt-list > li{
+  margin: var(--nt-li-gap) 0;
+  line-height: var(--nt-li-line);
+}
+
+/* 같은 깊이에서 연속 아이템 간격 살짝 더 띄우기 */
+.nt-list > li + li{ margin-top: calc(var(--nt-li-gap) + .06rem); }
+
+/* 중첩 리스트: 부모 아이템과 약간의 간격 + 단계별 들여쓰기 */
+.nt-list ul,
+.nt-list ol{
+  margin: .35rem 0 .5rem;
+  padding-left: var(--nt-indent-nested);  /* depth마다 동일하게 더해짐 */
+}
+
+/* 부모 아이템 텍스트와 자식 리스트 사이 작은 간격 */
+.nt-list li > .nt-list{ margin-top: .18rem; }
+
+/* 마커(•, 1., 등) 크기 살짝 줄여 텍스트와 충돌 방지 */
+.nt-list li::marker{ font-size: .92em; }
+
+/* --- 콜아웃 내부 보정: 아이콘 영역만큼 여유 공간 확보 --- */
+.notion-callout .callout-content .nt-list{
+  padding-left: calc(var(--nt-indent) + .45rem);
+}
+.notion-callout .callout-content .nt-list ul,
+.notion-callout .callout-content .nt-list ol{
+  padding-left: calc(var(--nt-indent-nested) + .35rem);
+}
