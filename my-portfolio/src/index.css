@@ -569,3 +569,28 @@ section[id] { scroll-margin-top: 84px; }
 .notion-callout .callout-content .nt-list ol{
   padding-left: calc(var(--nt-indent-nested) + .35rem);
 }
+
+/* ===== Notion headings (서로 다른 크기/여백) ===== */
+:root{
+  --nt-h1-size: clamp(1.45rem, 2.3vw, 1.95rem);
+  --nt-h2-size: clamp(1.25rem, 1.9vw, 1.6rem);
+  --nt-h3-size: clamp(1.08rem, 1.5vw, 1.28rem);
+}
+
+.nt-h1, .nt-h2, .nt-h3{
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  margin: 1.1rem 0 .5rem;
+}
+
+.nt-h1{ font-size: var(--nt-h1-size); }
+.nt-h2{ font-size: var(--nt-h2-size); }
+.nt-h3{ font-size: var(--nt-h3-size); }
+
+/* 본문과의 간격 살짝 보강 */
+.nt-h1 + .text-body,
+.nt-h2 + .text-body,
+.nt-h3 + .text-body { margin-top: .25rem; }
+
+.nt-h1, .nt-h2, .nt-h3 { color: color-mix(in oklab, var(--text) 92%, transparent); }

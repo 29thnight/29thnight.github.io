@@ -68,9 +68,9 @@ function Block({ b }) {
   const data = b[t]
 
   switch (t) {
-    case 'heading_1': return <h1 className="h2"><RichText nodes={data.rich_text} /></h1>
-    case 'heading_2': return <h2 className="h3"><RichText nodes={data.rich_text} /></h2>
-    case 'heading_3': return <h3 className="h3"><RichText nodes={data.rich_text} /></h3>
+    case 'heading_1': return <h2 className="nt-h1"><RichText nodes={data.rich_text} /></h2>
+    case 'heading_2': return <h3 className="nt-h2"><RichText nodes={data.rich_text} /></h3>
+    case 'heading_3': return <h4 className="nt-h3"><RichText nodes={data.rich_text} /></h4>
 
     case 'paragraph':
       return <p className="text-body"><RichText nodes={data.rich_text} /></p>
