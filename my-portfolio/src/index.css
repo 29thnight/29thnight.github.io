@@ -724,14 +724,30 @@ section[id] { scroll-margin-top: 84px; }
   .notion-code{ overflow-x: auto; }
   .notion-code code{ white-space: pre-wrap; word-break: break-word; }
 }
-/* --- 브랜드 칩: 텍스트가 투명해지는 이슈(iOS) 방지 --- */
-.brand-gradient{
-  /* iOS에서 background-clip:text + text-fill-color:transparent 조합이 투명해지는 이슈 */
-  background: none !important;          /* 그라데이션 텍스트 끄기 */
-  color: var(--text) !important;        /* 일반 텍스트 컬러 */
-  -webkit-text-fill-color: currentColor !important;
+/* 기본: 그라데이션 텍스트 */
+.brand-gradient {
+  background: linear-gradient(135deg, var(--brand-g1), var(--brand-g2), var(--brand-g3));
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
-.brand-chip{ position: relative; display:inline-flex; align-items:center; }
+/* iOS WebKit 감지 + 터치(모바일) 한정 */
+@supports (-webkit-touch-callout: none) {
+  @media (pointer: coarse) and (max-width: 640px) {
+    .brand-gradient {
+      /* 그라데이션 텍스트 대신 일반 텍스트로 표시 */
+      background: none !important;
+      -webkit-background-clip: initial !important;
+              background-clip: border-box !important;
+      -webkit-text-fill-color: currentColor !important;
+      color: var(--text) !important;
+    }
+  }
+}
+
+/* (권장) 브랜드 칩 테두리 가상요소가 탭 클릭을 가리지 않도록 */
+.brand-chip::before { pointer-events: none; }
 
 /* 링/테두리용 가상요소가 클릭을 가리지 않도록 */
 .brand-chip::before{ pointer-events: none !important; }
