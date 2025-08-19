@@ -29,87 +29,83 @@ function Nav() {
   const [active, setActive] = useState("home")
 
   useEffect(() => {
-    const HEADER = 84
-    let tops = []
+  const HEADER = 84; // index.css의 scroll-margin-top과 동일하게 유지
+  let tops = [];
 
-    const measure = () => {
-      tops = sections
-        .map(({ id }) => {
-          const el = document.getElementById(id);
-          return { id, top: el ? el.getBoundingClientRect().top + window.scrollY : Infinity };
-        })
-        .sort((a, b) => a.top - b.top);
+  const measure = () => {
+    tops = sections
+      .map(({ id }) => {
+        const el = document.getElementById(id);
+        return { id, top: el ? el.getBoundingClientRect().top + window.scrollY : Infinity };
+      })
+      .sort((a, b) => a.top - b.top);
+  };
+
+  const pick = () => {
+    const pos = window.scrollY + HEADER + 1;
+    // ✅ 바닥 근처면 마지막 섹션으로 강제 전환
+    const nearBottom =
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+    if (nearBottom) {
+      setActive(sections[sections.length - 1].id);
+      return;
     }
-
-    const pick = () => {
-      const pos = window.scrollY + HEADER + 1
-      const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
-      if (nearBottom) { setActive(sections[sections.length - 1].id); return }
-      let current = sections[0].id
-      for (const r of tops) { if (r.top <= pos) current = r.id; else break }
-      setActive(current)
+    // 현재 위치 기준, 가장 최근(위) 섹션 선택
+    let current = sections[0].id;
+    for (const r of tops) {
+      if (r.top <= pos) current = r.id;
+      else break;
     }
+    setActive(current);
+  };
 
-    const onScroll = () => requestAnimationFrame(pick)
-    const onResize = () => { measure(); pick() }
+  const onScroll = () => requestAnimationFrame(pick);
+  const onResize = () => { measure(); pick(); };
 
-    const hash = window.location.hash.slice(1)
-    if (hash) setActive(hash)
+  // 초기 해시(#about 등) 반영
+  const hash = window.location.hash.slice(1);
+  if (hash) setActive(hash);
 
-    measure(); pick()
-    window.addEventListener("scroll", onScroll, { passive: true })
-    window.addEventListener("resize", onResize)
+  // 초기 측정 + 이벤트 등록
+  measure(); pick();
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onResize);
 
-    const main = document.querySelector("main")
-    const ro = main ? new ResizeObserver(() => { measure(); pick() }) : null
-    ro?.observe(main)
-    document.fonts?.ready?.then(() => { measure(); pick() })
+  // ✅ 레이아웃/콘텐츠 높이 변화 대응 (프로젝트 필터 등)
+  const main = document.querySelector("main");
+  const ro = main ? new ResizeObserver(() => { measure(); pick(); }) : null;
+  ro?.observe(main);
 
-    return () => {
-      window.removeEventListener("scroll", onScroll)
-      window.removeEventListener("resize", onResize)
-      ro?.disconnect()
-    }
-  }, [sections])
+  // 폰트 로드 후 치수 변동 대응
+  document.fonts?.ready?.then(() => { measure(); pick(); });
 
-  const scrollTo = (id) => (e) => {
-    e.preventDefault()
-    const el = document.getElementById(id)
-    if (!el) return
-    const nav = document.querySelector(".site-nav")
-    const navH = nav ? nav.offsetHeight : 84
-    const top = el.getBoundingClientRect().top + window.scrollY - navH - 8
-    window.scrollTo({ top, behavior: "smooth" })
-  }
+  return () => {
+    window.removeEventListener("scroll", onScroll);
+    window.removeEventListener("resize", onResize);
+    ro?.disconnect();
+  };
+}, [sections]);
 
   return (
-    // ✅ 전체 폭을 차지하는 sticky 네비
-    <header className="site-nav">
-      <div className="nav-inner">
-        <GlassCard>
-          <nav className="nav">
-            <a href="#home" onClick={scrollTo("home")} className="brand brand-gradient brand-chip">
-              Portfolio
-            </a>
-
-            {/* ✅ 가로 스크롤 가능한 탭 래퍼 */}
-            <div className="nav-scroll">
-              {sections.map(({ id, label }) => (
-                <a
-                  key={id}
-                  href={`#${id}`}
-                  onClick={scrollTo(id)}
-                  className={`nav-link ${active === id ? "active" : ""}`}
-                  aria-current={active === id ? "page" : undefined}
-                >
-                  {label}
-                </a>
-              ))}
-              <ThemeToggle />
-            </div>
-          </nav>
-        </GlassCard>
-      </div>
+    <header className="container topbar">
+      <GlassCard>
+        <nav className="nav">
+          <a href="#home" className="brand brand-gradient brand-chip">Portfolio</a>
+          <div className="links nav-links">
+            {sections.map(({ id, label }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                className={`nav-link ${active === id ? "active" : ""}`}
+                aria-current={active === id ? "page" : undefined}
+              >
+                {label}
+              </a>
+            ))}
+            <ThemeToggle />
+          </div>
+        </nav>
+      </GlassCard>
     </header>
   )
 }
