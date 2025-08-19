@@ -773,3 +773,45 @@ section[id] { scroll-margin-top: 84px; }
   .topbar .nav-links .theme-fab{ margin: 0 !important; }
 }
 
+@media (max-width: 640px){
+  /* 그리드 아이템이 가로로 늘어나지 않게 */
+  .topbar .nav{
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: .55rem;
+    justify-items: start;        /* ✅ 기본 stretch → start */
+    align-items: center;
+  }
+
+  /* 브랜드(Portfolio) 캡슐 길이 고정: 내용만큼만 */
+  .topbar .brand{
+    justify-self: start;         /* ✅ 그리드 안에서 좌측 정렬 + 내용 폭 */
+    width: auto !important;      /* ✅ 혹시 남아있는 100% 폭 제거 */
+    max-width: 80%;
+    display: inline-flex;
+    background: none; border: 0; /* 텍스트만 보이게 */
+    padding: 0;                  /* 필요 시 살짝 여백 주려면 조절 */
+  }
+
+  /* 모바일에선 브랜드의 그라데이션 링 자체를 끄기 */
+  .brand-chip::before{
+    display: none !important;    /* ✅ 긴 캡슐로 보이던 원인 제거 */
+  }
+
+  /* (참고) iOS 그라데이션 텍스트 투명 이슈 폴백 */
+  @supports (-webkit-touch-callout: none) {
+    .brand-gradient{
+      background: none !important;
+      -webkit-background-clip: initial !important;
+              background-clip: border-box !important;
+      -webkit-text-fill-color: currentColor !important;
+      color: var(--text) !important;
+    }
+  }
+
+  /* 네비 캡슐은 화면 폭에 맞춰 중앙 정렬 */
+  .topbar .nav-links{
+    width: 100%;
+    justify-content: center;
+  }
+}
