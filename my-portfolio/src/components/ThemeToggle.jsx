@@ -20,7 +20,7 @@ export default function ThemeToggle() {
 
   return (
     <button
-      className="link"
+      className="link theme-fab"
       aria-label="Toggle theme"
       title={`Switch to ${next} mode`}
       onClick={() => setTheme(next)}
