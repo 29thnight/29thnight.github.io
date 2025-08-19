@@ -1,15 +1,33 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
+import { createPortal } from "react-dom"
 
 function getInitialTheme() {
-  // 저장된 값 > 시스템 설정 순서로 반영
   const saved = localStorage.getItem("theme")
   if (saved === "light" || saved === "dark") return saved
   const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches
   return prefersDark ? "dark" : "light"
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const mqW = window.matchMedia("(max-width: 640px)")
+    const mqP = window.matchMedia("(pointer: coarse)")
+    const update = () => setIsMobile(!!(mqW.matches && mqP.matches))
+    update()
+    mqW.addEventListener?.("change", update)
+    mqP.addEventListener?.("change", update)
+    return () => {
+      mqW.removeEventListener?.("change", update)
+      mqP.removeEventListener?.("change", update)
+    }
+  }, [])
+  return isMobile
+}
+
 export default function ThemeToggle() {
   const [theme, setTheme] = useState(getInitialTheme)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -17,8 +35,7 @@ export default function ThemeToggle() {
   }, [theme])
 
   const next = theme === "dark" ? "light" : "dark"
-
-  return (
+  const btn = (
     <button
       className="link theme-fab"
       aria-label="Toggle theme"
@@ -28,4 +45,7 @@ export default function ThemeToggle() {
       {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
     </button>
   )
+
+  // ✅ 모바일에선 버튼을 body로 포털 → 네비 캡슐 밖(뷰포트 우하단)에 고정
+  return isMobile ? createPortal(btn, document.body) : btn
 }
