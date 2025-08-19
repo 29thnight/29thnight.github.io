@@ -642,3 +642,85 @@ section[id] { scroll-margin-top: 84px; }
     word-break: break-word;
   }
 }
+
+/* ===== 모바일 전용 튜닝 ===== */
+@media (max-width: 640px){
+  /* 화면 가로 넘침 방지 */
+  html, body { max-width: 100vw; overflow-x: hidden; }
+
+  /* 상단바를 모바일 친화적으로 재배치 */
+  .container.topbar { 
+    position: sticky; top: 0; z-index: 50;
+    padding-inline: .5rem;     /* 좌우 여백만 살짝 */
+  }
+  .topbar .nav{
+    display: grid;
+    grid-template-columns: 1fr; /* 위아래 두 줄 배치 (브랜드 / 탭들) */
+    row-gap: .45rem;
+    align-items: center;
+  }
+
+  /* 브랜드(왼쪽 로고/텍스트) */
+  .topbar .brand{
+    display: inline-block;
+    padding: .4rem .65rem;
+    border-radius: 9999px;
+    border: 1px solid var(--glass-brd);
+    background: var(--glass-hover);
+    font-size: .95rem;
+    line-height: 1;
+  }
+
+  /* 탭 영역: 가로 스크롤 가능하게 */
+  .topbar .nav-links{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    overflow-x: auto;           /* ✅ 넘치면 가로 스크롤 */
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    white-space: nowrap;        /* 한 줄 유지 */
+    padding-bottom: .25rem;     /* 손가락 스와이프 여유 */
+  }
+  .topbar .nav-links::-webkit-scrollbar{ display: none; }
+  .topbar .nav-links{ scrollbar-width: none; }
+  .topbar .nav-links > *{ flex-shrink: 0; } /* ThemeToggle도 줄어들지 않게 */
+
+  /* 개별 탭 스타일(모바일 사이즈) */
+  .topbar .nav-link{
+    padding: .4rem .65rem;
+    border-radius: 9999px;
+    border: 1px solid var(--glass-brd);
+    background: var(--glass-hover);
+    font-size: .9rem;
+    line-height: 1;
+    text-decoration: none;
+  }
+  .topbar .nav-link.active{
+    border-color: transparent;
+    background:
+      linear-gradient(var(--glass-hover), var(--glass-hover)) padding-box,
+      linear-gradient(135deg, var(--brand-g1), var(--brand-g2), var(--brand-g3)) border-box;
+    border: 1.5px solid transparent;
+  }
+
+  /* 섹션 앵커 보정: sticky 헤더 고려 */
+  #home, #about, #projects, #experience, #contact {
+    scroll-margin-top: 84px;
+  }
+
+  /* 프로젝트 카드: 모바일에선 1열 + 확장 카드도 자연스럽게 */
+  .grid { grid-template-columns: 1fr !important; }
+  .grid .expanded { grid-column: auto; }
+  .card-expanded { padding: 1rem; }
+
+  /* Notion/콜아웃이 튀어나오지 않게 */
+  .notion-wrap { overflow-x: hidden; }
+  .notion-callout .callout-content{
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .notion-code{ overflow-x: auto; }
+  .notion-code code{ white-space: pre-wrap; word-break: break-word; }
+}
