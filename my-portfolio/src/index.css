@@ -592,3 +592,53 @@ section[id] { scroll-margin-top: 84px; }
 .nt-h1 + .text-body,
 .nt-h2 + .text-body,
 .nt-h3 + .text-body { margin-top: .25rem; }
+
+/* 콜아웃: 컨테이너가 부모 폭 안에 꼭 맞도록 */
+.notion-callout{
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;              /* 아주 긴 토큰이 있을 때 마지막 안전장치 */
+}
+
+/* 콜아웃 본문: 줄바꿈 허용 + flex 수축 허용 */
+.notion-callout .callout-content{
+  min-width: 0;                  /* ✅ flex 자식이 줄어들 수 있게 */
+  overflow-wrap: anywhere;       /* 아무 곳에서나 줄바꿈(긴 URL/단어 대응) */
+  word-break: break-word;        /* 단어 중간 분리 허용(크로스 브라우저) */
+  hyphens: auto;                 /* 하이픈 자동 삽입(지원 브라우저) */
+}
+
+/* 콜아웃 내부 링크/코드도 줄바꿈 허용 */
+.notion-callout .callout-content a{
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.notion-callout .callout-content code{
+  white-space: pre-wrap;         /* 코드는 기본 pre지만 모바일에선 감싸기 */
+  word-break: break-word;
+}
+
+/* 아주 작은 화면에서 아이콘/내용이 겹치지 않게 보정 */
+@media (max-width: 420px){
+  .notion-callout{
+    gap: .55rem;
+    padding-right: .5rem;        /* 오른쪽 약간의 여유 */
+  }
+  .notion-callout .callout-icon{
+    width: 1.5rem; height: 1.5rem;  /* 아이콘 살짝 축소 */
+  }
+  /* 리스트가 콜아웃 안에서 넘치지 않도록 여백 축소 */
+  .notion-callout .callout-content .nt-list{
+    padding-left: 1rem;
+  }
+}
+
+/* 코드 블록(콜아웃 밖 포함) 모바일에서 가로 스크롤/줄바꿈 처리 */
+@media (max-width: 480px){
+  .notion-code{ overflow-x: auto; }
+  .notion-code code{
+    white-space: pre-wrap;       /* 너무 긴 라인 줄바꿈 */
+    word-break: break-word;
+  }
+}

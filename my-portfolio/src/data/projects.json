@@ -12,17 +12,6 @@
     "notionPageId": "24fda112-63ef-8080-9c15-e10769f110a4"
   },
   {
-    "id": "24fda112-63ef-803f-baa5-f74da3154d4b",
-    "title": "Behavior Tree Builder",
-    "desc": "BT 빌더/런타임 + Blackboard, 모듈 클래스 바인딩.",
-    "tags": [
-      "\"Tools\"",
-      "Behavior Tree"
-    ],
-    "link": null,
-    "notionPageId": "24fda112-63ef-803f-baa5-f74da3154d4b"
-  },
-  {
     "id": "24fda112-63ef-8074-9dcb-cb7e2f4e7e52",
     "title": "Creator Engine - 아시스 길들이기",
     "desc": "프로젝트용 게임 엔진 구조 전반 구현.",
@@ -33,6 +22,17 @@
     ],
     "link": null,
     "notionPageId": "24fda112-63ef-8074-9dcb-cb7e2f4e7e52"
+  },
+  {
+    "id": "24fda112-63ef-803f-baa5-f74da3154d4b",
+    "title": "Behavior Tree Builder",
+    "desc": "BT 빌더/런타임 + Blackboard, 모듈 클래스 바인딩.",
+    "tags": [
+      "\"Tools\"",
+      "Behavior Tree"
+    ],
+    "link": null,
+    "notionPageId": "24fda112-63ef-803f-baa5-f74da3154d4b"
   },
   {
     "id": "24fda112-63ef-8082-87fd-c679e41bc17b",
