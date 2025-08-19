@@ -737,19 +737,56 @@ section[id] { scroll-margin-top: 84px; }
   }
 }
 
-/* ── 모바일 전용: ThemeToggle을 화면 우하단 고정(FAB) ── */
+/* ── 모바일 전용 (≤640px) ── */
 @media (max-width: 640px){
-  /* 네비 캡슐의 장식 레이어가 클릭 막지 않도록 */
-  .topbar .nav-links::before{ pointer-events: none; }
 
-  /* 네비 캡슐은 가운데 정렬만 */
-  .topbar .nav-links{
-    justify-content: center;
-    gap: .35rem;
-    padding: .35rem .5rem;
+  /* 네비 레이아웃: 브랜드가 가로로 늘어나지 않게 */
+  .topbar .nav{
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: .55rem;
+    justify-items: start;            /* ✅ stretch → start */
+    align-items: center;
   }
 
-  /* ✅ 토글을 뷰포트로 강제 고정 (네비 안에 있어도 강제로 분리) */
+  /* 브랜드(Portfolio): 내용 폭만큼, 캡슐 링 제거 */
+  .topbar .brand{
+    justify-self: start;             /* ✅ 좌측 정렬 + 내용 폭 */
+    width: auto !important;
+    max-width: 80%;
+    display: inline-flex;
+    padding: 0;                      /* 텍스트만 보이게 */
+    background: none;
+    border: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    z-index: 1;
+  }
+  .brand-chip::before{               /* ✅ 길게 보이던 그라데이션 링 제거 */
+    display: none !important;
+  }
+
+  /* 네비 캡슐 */
+  .topbar .nav-links{
+    display: flex;                   /* (보장) */
+    align-items: center;
+    justify-content: center;         /* ✅ 중앙 정렬 */
+    gap: .35rem;
+    padding: .35rem .5rem;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    position: relative;
+    z-index: 2;                      /* 브랜드보다 위 */
+  }
+  .topbar .nav-links::before{ pointer-events: none; }
+  .topbar .nav-link{ flex: 0 0 auto; }
+
+  /* ✅ 토글을 뷰포트 우하단에 고정(FAB) — 네비 안에 있어도 강제 분리 */
   .theme-fab,
   .topbar .nav-links .theme-fab{
     position: fixed !important;
@@ -767,51 +804,11 @@ section[id] { scroll-margin-top: 84px; }
     -webkit-backdrop-filter: blur(14px) saturate(160%);
     box-shadow: 0 10px 28px rgba(0,0,0,.18);
     pointer-events: auto;
+    margin: 0 !important;            /* 네비 내부 자리차지 제거 */
   }
 
-  /* 토글이 고정되므로 네비 내부에서 자리 차지하지 않게(마진 제거) */
-  .topbar .nav-links .theme-fab{ margin: 0 !important; }
+  /* 앵커 스크롤 보정 */
+  #home, #about, #projects, #experience, #contact { scroll-margin-top: 84px; }
 }
 
-@media (max-width: 640px){
-  /* 그리드 아이템이 가로로 늘어나지 않게 */
-  .topbar .nav{
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: .55rem;
-    justify-items: start;        /* ✅ 기본 stretch → start */
-    align-items: center;
-  }
 
-  /* 브랜드(Portfolio) 캡슐 길이 고정: 내용만큼만 */
-  .topbar .brand{
-    justify-self: start;         /* ✅ 그리드 안에서 좌측 정렬 + 내용 폭 */
-    width: auto !important;      /* ✅ 혹시 남아있는 100% 폭 제거 */
-    max-width: 80%;
-    display: inline-flex;
-    background: none; border: 0; /* 텍스트만 보이게 */
-    padding: 0;                  /* 필요 시 살짝 여백 주려면 조절 */
-  }
-
-  /* 모바일에선 브랜드의 그라데이션 링 자체를 끄기 */
-  .brand-chip::before{
-    display: none !important;    /* ✅ 긴 캡슐로 보이던 원인 제거 */
-  }
-
-  /* (참고) iOS 그라데이션 텍스트 투명 이슈 폴백 */
-  @supports (-webkit-touch-callout: none) {
-    .brand-gradient{
-      background: none !important;
-      -webkit-background-clip: initial !important;
-              background-clip: border-box !important;
-      -webkit-text-fill-color: currentColor !important;
-      color: var(--text) !important;
-    }
-  }
-
-  /* 네비 캡슐은 화면 폭에 맞춰 중앙 정렬 */
-  .topbar .nav-links{
-    width: 100%;
-    justify-content: center;
-  }
-}
