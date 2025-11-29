@@ -1,5 +1,14 @@
 import { useEffect, useState, useRef } from 'react'
 import Prism from 'prismjs'
+import 'prismjs/components/prism-cpp'
+import 'prismjs/components/prism-csharp'
+import 'prismjs/components/prism-python'
+import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-java'
+import 'prismjs/components/prism-json'
+import 'prismjs/components/prism-bash'
+import 'prismjs/components/prism-markup'
 
 const BASE = (import.meta.env && import.meta.env.BASE_URL) || '/'
 
