@@ -124,6 +124,9 @@ function Hero() {
             {site?.links?.linkedin && (
               <a className="link" href={site.links.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             )}
+            {site?.links?.detail && (
+              <a className="link" href={site.links.detail} target="_blank" rel="noreferrer">Detail</a>
+            )}
             <a className="link" href="#contact">Email</a>
           </div>
         </div>

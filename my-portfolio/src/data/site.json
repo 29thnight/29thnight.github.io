@@ -3,7 +3,8 @@
   "heroSubtitle": "Game Developer — DirectX 11, Tooling, Game Engine Architecture",
   "links": {
     "github": "https://github.com/29thnight",
-    "linkedin": ""
+    "linkedin": "",
+    "detail": ""
   },
   "contactEmail": "ideneb@naver.com",
   "aboutText": "디퍼드 렌더링, 멀티스레드 파이프라인, 포스트 프로세싱 그래픽스 전반 최적화에 관심이 많습니다. ImGui 기반 툴링과 YAML 리플렉션 시스템으로 워크플로우를 단순화하고, 멀티스레드 활용으로 성능을 극대화 하는데 관심이 많습니다."
