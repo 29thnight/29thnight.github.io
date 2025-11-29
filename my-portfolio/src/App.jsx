@@ -199,7 +199,7 @@ function Projects() {
 
       {/* 필터 카드 */}
       <GlassCard className="section">
-        <div className="row between" style={{alignItems:"flex-start"}}>
+        <div className="row between" style={{alignItems:"center"}}>
           <div>
             <div className="muted" style={{marginBottom:".5rem"}}>
               {selected.size === 0 ? "All projects" : `Filtered by: ${Array.from(selected).join(", ")}`}
@@ -211,7 +211,7 @@ function Projects() {
               onClear={onClear}
             />
           </div>
-          <div className="muted">
+          <div className="muted" style={{whiteSpace:"nowrap"}}>
             {filtered.length} / {projects.length}
           </div>
         </div>
