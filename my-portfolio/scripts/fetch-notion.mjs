@@ -16,6 +16,7 @@ const SITE_NAME_PROP      = 'ProfilName'
 const SITE_SUBTITLE_PROP  = 'Desc'
 const SITE_GITHUB_PROP    = 'GitHub'
 const SITE_LINKEDIN_PROP  = 'LinkedIn'
+const SITE_DETAIL_PROP    = 'Detail'
 const SITE_EMAIL_PROP     = 'Email'
 const SITE_ABOUT_TEXT_PROP = 'AboutText'
 
@@ -264,7 +265,8 @@ if (NOTION_SITE_DB_ID) {
       heroSubtitle: pickSubtitle(),
       links: {
         github:   p['GitHub']?.url || '',
-        linkedin: p['LinkedIn']?.url || ''
+        linkedin: p['LinkedIn']?.url || '',
+        detail:   p['Detail']?.url || ''
       },
       contactEmail: p['Email']?.email || '',
       aboutText:    joinText(p[SITE_ABOUT_TEXT_PROP]?.rich_text) || ''
