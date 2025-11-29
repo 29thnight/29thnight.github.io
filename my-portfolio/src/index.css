@@ -462,7 +462,6 @@ section[id] { scroll-margin-top: 84px; }
 
 /* === 인용 === */
 .notion-quote{
-  display:flex; align-items:center;
   margin:.75rem 0;
   padding:.5rem .9rem;
   border-left: 3px solid var(--glass-brd);
@@ -481,7 +480,7 @@ section[id] { scroll-margin-top: 84px; }
 }
 .callout-icon{
   flex:0 0 auto; width:1.75rem; height:1.75rem;
-  display:grid; place-items:flex-start;
+  display:grid; place-items:center;
   border-radius:.5rem;
   background: color-mix(in oklab, var(--glass-bg) 85%, black 5%);
   border:1px solid var(--glass-brd);
