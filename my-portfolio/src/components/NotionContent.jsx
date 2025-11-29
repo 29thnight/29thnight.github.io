@@ -1,6 +1,31 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import Prism from 'prismjs'
 
 const BASE = (import.meta.env && import.meta.env.BASE_URL) || '/'
+
+/* === Code Block with Syntax Highlighting === */
+function CodeBlock({ code, language, displayLang }) {
+  const codeRef = useRef(null)
+
+  useEffect(() => {
+    if (codeRef.current && language !== 'plaintext') {
+      try {
+        Prism.highlightElement(codeRef.current)
+      } catch (e) {
+        console.warn('Prism highlighting failed:', e)
+      }
+    }
+  }, [code, language])
+
+  return (
+    <pre className="notion-code">
+      <code ref={codeRef} className={`language-${language}`}>
+        {code}
+      </code>
+      {displayLang ? <span className="code-lang">{displayLang}</span> : null}
+    </pre>
+  )
+}
 
 /* === Rich text === */
 function RichText({ nodes }) {
@@ -102,12 +127,14 @@ function Block({ b }) {
     case 'code': {
       const txt = (data.rich_text || []).map(x => x.plain_text).join('')
       const lang = data.language || ''
-      return (
-        <pre className="notion-code">
-          <code>{txt}</code>
-          {lang ? <span className="code-lang">{lang}</span> : null}
-        </pre>
-      )
+      const langMap = {
+        'c++': 'cpp',
+        'c#': 'csharp',
+        'plain text': 'plaintext'
+      }
+      const prismLang = langMap[lang.toLowerCase()] || lang.toLowerCase() || 'plaintext'
+      
+      return <CodeBlock code={txt} language={prismLang} displayLang={lang} />
     }
 
     /* 리스트 아이템 (자식 리스트는 li 내부에서 한 번만 감싸기) */

@@ -513,6 +513,104 @@ section[id] { scroll-margin-top: 84px; }
   background: color-mix(in oklab, var(--glass-bg) 92%, black 4%);
 }
 
+/* ===== Prism.js MSVC 스타일 Syntax Highlighting ===== */
+/* 라이트 테마 (Visual Studio Light) */
+:root {
+  --prism-bg: #ffffff;
+  --prism-text: #000000;
+  --prism-comment: #008000;        /* 녹색 주석 */
+  --prism-keyword: #0000ff;        /* 파랑 키워드 */
+  --prism-string: #a31515;         /* 갈색 문자열 */
+  --prism-number: #098658;         /* 청록 숫자 */
+  --prism-function: #795e26;       /* 갈색 함수 */
+  --prism-class: #267f99;          /* 청록 클래스/타입 */
+  --prism-operator: #000000;       /* 검정 연산자 */
+  --prism-preprocessor: #9b9b9b;   /* 회색 전처리기 */
+}
+
+/* 다크 테마 (Visual Studio Dark) */
+:root[data-theme="dark"] {
+  --prism-bg: #1e1e1e;
+  --prism-text: #d4d4d4;
+  --prism-comment: #6a9955;        /* 녹색 주석 */
+  --prism-keyword: #569cd6;        /* 하늘색 키워드 */
+  --prism-string: #ce9178;         /* 주황 문자열 */
+  --prism-number: #b5cea8;         /* 연한 녹색 숫자 */
+  --prism-function: #dcdcaa;       /* 노란색 함수 */
+  --prism-class: #4ec9b0;          /* 청록 클래스/타입 */
+  --prism-operator: #d4d4d4;       /* 회색 연산자 */
+  --prism-preprocessor: #c586c0;   /* 보라 전처리기 */
+}
+
+/* 코드 블록 기본 스타일 */
+.notion-code code[class*="language-"] {
+  color: var(--prism-text);
+  text-shadow: none;
+}
+
+/* 토큰 색상 */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--prism-comment);
+  font-style: italic;
+}
+
+.token.keyword,
+.token.tag,
+.token.boolean,
+.token.constant {
+  color: var(--prism-keyword);
+  font-weight: 600;
+}
+
+.token.string,
+.token.attr-value,
+.token.char,
+.token.regex {
+  color: var(--prism-string);
+}
+
+.token.number {
+  color: var(--prism-number);
+}
+
+.token.function,
+.token.function-name {
+  color: var(--prism-function);
+}
+
+.token.class-name,
+.token.type-name,
+.token.builtin {
+  color: var(--prism-class);
+  font-weight: 500;
+}
+
+.token.operator,
+.token.entity,
+.token.url {
+  color: var(--prism-operator);
+}
+
+.token.punctuation {
+  color: var(--prism-text);
+  opacity: 0.7;
+}
+
+/* C++ 전처리기 (#include, #define 등) */
+.token.macro,
+.token.property,
+.token.directive {
+  color: var(--prism-preprocessor);
+}
+
+.token.namespace {
+  color: var(--prism-class);
+  opacity: 0.9;
+}
+
 /* === 체크박스/토글 === */
 .notion-todo { display:flex; gap:.5rem; align-items:flex-start; margin:.35rem 0; }
 .notion-toggle { margin:.5rem 0; }
