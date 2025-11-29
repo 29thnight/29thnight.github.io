@@ -472,7 +472,7 @@ section[id] { scroll-margin-top: 84px; }
 
 /* === 콜아웃 === */
 .notion-callout{
-  display:flex; gap:.6rem; align-items:flex-start;
+  display:flex; gap:.6rem; align-items:center;
   margin:.75rem 0; padding:.7rem .9rem;
   border:1px solid var(--glass-brd);
   background: var(--glass-hover);
