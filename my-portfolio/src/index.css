@@ -469,6 +469,9 @@ section[id] { scroll-margin-top: 84px; }
   border-radius:.5rem;
   opacity:.95;
 }
+.notion-quote > *:last-child{
+  margin-bottom: 0;
+}
 
 /* === 콜아웃 === */
 .notion-callout{
