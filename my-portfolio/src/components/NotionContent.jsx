@@ -1,6 +1,9 @@
 import { useEffect, useState, useRef } from 'react'
 import Prism from 'prismjs'
+// 의존성 순서 중요: C를 먼저 로드해야 C++이 작동
+import 'prismjs/components/prism-c'
 import 'prismjs/components/prism-cpp'
+import 'prismjs/components/prism-clike'
 import 'prismjs/components/prism-csharp'
 import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-javascript'
@@ -17,18 +20,25 @@ function CodeBlock({ code, language, displayLang }) {
   const codeRef = useRef(null)
 
   useEffect(() => {
-    if (codeRef.current && language !== 'plaintext') {
+    if (!codeRef.current) return
+    
+    if (language && language !== 'plaintext') {
       try {
-        Prism.highlightElement(codeRef.current)
+        // 언어가 로드되었는지 확인
+        if (Prism.languages[language]) {
+          Prism.highlightElement(codeRef.current)
+        } else {
+          console.warn(`Language '${language}' not loaded`)
+        }
       } catch (e) {
-        console.warn('Prism highlighting failed:', e)
+        console.error('Prism highlighting failed:', e)
       }
     }
   }, [code, language])
 
   return (
     <pre className="notion-code">
-      <code ref={codeRef} className={`language-${language}`}>
+      <code ref={codeRef} className={language ? `language-${language}` : ''}>
         {code}
       </code>
       {displayLang ? <span className="code-lang">{displayLang}</span> : null}
