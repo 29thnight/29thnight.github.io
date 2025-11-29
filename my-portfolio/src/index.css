@@ -463,7 +463,7 @@ section[id] { scroll-margin-top: 84px; }
 /* === 인용 === */
 .notion-quote{
   margin:.75rem 0;
-  padding:.5rem .9rem;
+  padding:.7rem .9rem;
   border-left: 3px solid var(--glass-brd);
   background: color-mix(in oklab, var(--glass-bg) 92%, black 4%);
   border-radius:.5rem;
