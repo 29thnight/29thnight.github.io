@@ -10,6 +10,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
 
 concurrency:
   group: pages
@@ -77,5 +78,19 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # Pages 설정이 "Deploy from a branch"면 GitHub 기본 Jekyll 배포(pages build and deployment)가
+      # 동시에 돌면서 Vite 빌드 결과를 덮어쓸 수 있음 → 그 배포가 끝난 뒤에 배포해서 항상 Vite 결과가 남게 함
+      - name: Wait for legacy Jekyll Pages deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 36); do
+            pending=$(gh api "repos/${{ github.repository }}/actions/runs?head_sha=${{ github.sha }}&per_page=50" \
+              --jq '[.workflow_runs[] | select(.name == "pages build and deployment" and .status != "completed")] | length')
+            if [ "$pending" = "0" ]; then echo "no legacy deployment running"; exit 0; fi
+            echo "legacy Pages deployment still running ($i/36)"; sleep 10
+          done
+          echo "timed out waiting; deploying anyway"
+
       - id: deployment
         uses: actions/deploy-pages@v4
