@@ -71,13 +71,7 @@ jobs:
         with:
           path: my-portfolio/dist
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
+      # deploy 잡은 github-pages 환경을 점유하므로 대기는 build 잡에서 함.
       # Pages 설정이 "Deploy from a branch"면 GitHub 기본 Jekyll 배포(pages build and deployment)가
       # 동시에 돌면서 Vite 빌드 결과를 덮어쓸 수 있음 → 그 배포가 끝난 뒤에 배포해서 항상 Vite 결과가 남게 함
       - name: Wait for legacy Jekyll Pages deployment
@@ -92,5 +86,12 @@ jobs:
           done
           echo "timed out waiting; deploying anyway"
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
