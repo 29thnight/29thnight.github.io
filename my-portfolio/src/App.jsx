@@ -6,6 +6,8 @@ import NotionContent from "./components/NotionContent";
 import "./simplematic.css";
 
 const clean = (t) => String(t).replace(/^"+|"+$/g, "");
+const NOTION_HOME = "https://evanescent-stage-4f5.notion.site/2bada11263ef8099bc8ec0c57856ac38";
+const notionUrl = (id) => `https://evanescent-stage-4f5.notion.site/${id.replace(/-/g, "")}`;
 const realLink = (l) => (l && !l.includes("/USER/") ? l : null);
 const items = projects.map((p) => ({ ...p, tags: p.tags.map(clean) }));
 
@@ -73,7 +75,7 @@ function Home() {
   const [feat, ...rest] = items;
   const skills = [...new Set(items.flatMap((p) => p.tags))];
   const { github, linkedin, detail } = site.links;
-  const socials = [["GitHub", github], ["LinkedIn", linkedin], ["Detail", detail]].filter(([, u]) => u);
+  const socials = [["Notion", NOTION_HOME], ["GitHub", github], ["LinkedIn", linkedin], ["Detail", detail]].filter(([, u]) => u);
   return (
     <>
       <header className="hero" id="home">
@@ -82,6 +84,7 @@ function Home() {
           <h1>Hello, I am {site.heroName.split(" ")[0]}.<br />{site.heroSubtitle.split("—")[0].trim()}.</h1>
           <p>{site.heroSubtitle.split("—")[1]?.trim()}</p>
           <a className="link" href={`mailto:${site.contactEmail}`}>Contact me <Arrow /></a>
+          <a className="link" style={{ marginLeft: 16 }} href={NOTION_HOME} target="_blank" rel="noreferrer">Notion <Arrow /></a>
         </div>
       </header>
 
@@ -161,6 +164,7 @@ function Project({ id }) {
       <div className="meta">
         <div><b>Tags</b><span>{p.tags.join(", ")}</span></div>
         <div><b>Role</b><span>Development</span></div>
+        <div><b>Notion</b><a className="link" href={notionUrl(p.notionPageId)} target="_blank" rel="noreferrer">View page <Arrow /></a></div>
         {ext && <div><b>Website</b><a className="link" href={ext} target="_blank" rel="noreferrer">Visit <Arrow /></a></div>}
       </div>
       <Mock title={p.title.split(" - ").pop()} tag={p.tags[0]} />
